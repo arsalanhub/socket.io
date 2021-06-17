@@ -6,15 +6,18 @@
 </head>
 <body> 
    
+   <ul id="messages"></ul>
     <form id="form" action="">
     	<input id="input" type="text-box" name="" />	
     	<button>Send</button>
     </form>
 
+    <h1 id="show"></h1>
     <script src="/socket.io/socket.io.js"></script>
     <script>
        var socket = io();
 
+       var messages = document.querySelector('#messages')
        var form = document.querySelector('#form');
        var input = document.querySelector('#input');
 
@@ -22,10 +25,25 @@
           e.preventDefault();
 
           if( input.value ) {
-          	socket.emit('send message', input.value)
+          	socket.emit('chat message', input.value)
+
+          	socket.on('chat message', (msg) => {
+       	  var item = document.createElement('li')
+       	  item.textContent = msg
+          messages.appendChild(item)
+          window.scrollTo(0, document.body.scrollHeight);
+       })
+       
           	input.value = ''
           }
        })
+
+       // socket.on('chat message', (msg) => {
+       // 	  var item = document.createElement('li')
+       // 	  item.textContent = msg
+       //    messages.appendChild(item)
+       //    window.scrollTo(0, document.body.scrollHeight);
+       // })
     </script>
 
 </body>
